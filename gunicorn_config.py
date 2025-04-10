@@ -1,9 +1,9 @@
 import os
 
 
-workers = int(os.environ.get('GUNICORN_PROCESSES', '1'))
+workers = int(os.environ.get('GUNICORN_PROCESSES', '2'))
 
-threads = int(os.environ.get('GUNICORN_THREADS', '1'))
+threads = int(os.environ.get('GUNICORN_THREADS', '4'))
 
 # timeout = int(os.environ.get('GUNICORN_TIMEOUT', '120'))
 
