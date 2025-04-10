@@ -23,7 +23,7 @@ api.add_resource(AnalysisResource, "/api/llama/analysis")
 
 
 def main():
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", port=8082)
 
 
 main()
