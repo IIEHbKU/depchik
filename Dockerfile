@@ -3,11 +3,12 @@ FROM python:3.12
 WORKDIR /app
 
 COPY requirements.txt .
+RUN pip3 install --upgrade pip
+RUN pip install -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY . /app
+WORKDIR /app
 
-COPY . .
+EXPOSE 8082
 
-EXPOSE 5000
-
-CMD ["gunicorn", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn","--config", "gunicorn_config.py", "app:app"]
