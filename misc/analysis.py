@@ -1,27 +1,25 @@
 import json
-from typing import Dict, Any
-
-import aiohttp
+import requests
 
 
-async def generate_analysis(
-        model: str,
-        prompt: str,
-        stream: bool
-) -> Dict[str, Any]:
-    api_url = "http://127.0.0.1:11434/api/generate",
-    body = {
-        "model": model,
-        "prompt": prompt,
-        "stream": stream
-    }
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-            url=api_url,
-            headers={"Content-Type": "application/json"},
-            json=body
-        ) as response:
-            response_text = await response.text()
-            response.raise_for_status()
-            response_data = json.loads(response_text)
-            return response_data
+def generate_analysis(data):
+    r = requests.post(
+        "http://127.0.0.1:11434/api/generate",
+        json={
+            "model": "llama3",
+            "prompt": f"""
+                У тебя есть задача: дать рекомендации (советы) по улучшению продуктивности, распределения времени и
+                 планирования задач на день, используя информацию ниже, которая поможет грамотнее выстроить рекоммендации исходя из
+                 персонального времяпрепровождения дня. Совет должен быть лаконичен и иметь реальное применение в жизни. Ты
+                 НЕ ДОЛЖНА использовать вводные и завершающие фразы, лишь предоставить структурированный совет. Он должен быть
+                 написан СТРОГО на РУССКОМ языке. Также ориентируйся на то, что пользователь студент, у которого есть личные дела,
+                 учеба и работа.
+                 Информация рутинных задач пользователя: {data} 
+            """,
+            "stream": False
+        }
+    )
+
+    data = r.content.decode("utf-8")
+    res = json.loads(data)["response"]
+    return res
